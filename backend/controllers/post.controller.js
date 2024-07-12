@@ -236,7 +236,7 @@ export const getUserPosts = async (req, res) => {
 	res.status(200).json(posts);
 	} catch (error) {
 		res.status(500).json({ error: "Internal server error" });
-        console.log("Error in getUserPosts controller: ", error);
+    console.log("Error in getUserPosts controller: ", error);
 	}
 };
 
