@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CreatePost from '../components/CreatePost';
+import CreatePost from '../pages/CreatePost';
 import Posts from '../components/Posts';
 
 const HomePage = () => {
@@ -11,9 +11,7 @@ const HomePage = () => {
 				{/* Header */}
 				<div className='flex w-full border-b border-gray-700'>
 					<div
-						className={
-							"flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
-						}
+						className={"flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"}
 						onClick={() => setFeedType("forYou")}
 					>
 						For you
