@@ -37,12 +37,14 @@ const ProfilePage = () => {
 
   const handleImgChange = (e, state) => {
     const file = e.target.files[0];
+
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
         state === "coverImg" && setCoverImg(reader.result);
         state === "profileImg" && setProfileImg(reader.result);
       };
+      
       reader.readAsDataURL(file);
     }
   };
@@ -149,6 +151,7 @@ const ProfilePage = () => {
                 )}
               </div>
 
+             {/*********************** User Details *************************** */}
               <div className="flex flex-col gap-4 mt-14 px-4">
                 <div className="flex flex-col">
                   <span className="font-bold text-lg">{user?.fullName}</span>
@@ -201,6 +204,8 @@ const ProfilePage = () => {
                 </div>
               </div>
 
+
+              {/************************************************** */}
               <div className="flex w-full border-b border-gray-700 mt-4">
                 <div
                   className="flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 relative cursor-pointer"
@@ -225,6 +230,7 @@ const ProfilePage = () => {
             </>
           )}
 
+         {/************************************************** */}
           <Posts />
         </div>
       </div>
