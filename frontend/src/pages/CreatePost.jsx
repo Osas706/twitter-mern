@@ -39,7 +39,7 @@ const CreatePost = () => {
     onSuccess: () => {
       setText('');
       setImg(null);
-      toast.success("POst created successfully");
+      toast.success("Post created successfully");
 
       //invalidate d query
       queryClinet.invalidateQueries({ queryKey: ["posts"]});
