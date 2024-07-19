@@ -3,7 +3,7 @@ import {useQueryClient, useQuery, useMutation} from '@tanstack/react-query';
 import {toast} from 'react-hot-toast';
 
 import { IoSettingsOutline } from "react-icons/io5";
-import { FaUser } from "react-icons/fa";
+import { FaTrash, FaUser } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import LoadingSpinner from "../components/LoadingSpinner";
 
@@ -19,6 +19,7 @@ const NotificationPage = () => {
 				const data = await res.json();
 				if (!res.ok) throw new Error(data.error || "Something went wrong");
 
+        console.log(data);
 				return data;
 			} catch (error) {
 				throw new Error(error);
@@ -44,6 +45,34 @@ const NotificationPage = () => {
 
 		onSuccess: () => {
 			toast.success("Notifications deleted successfully");
+			queryClient.invalidateQueries({ queryKey: ["notifications"] });
+		},
+
+		onError: (error) => {
+			toast.error(error.message);
+		},
+	});
+
+  //delete notification
+  const { mutate: deleteNotification } = useMutation({
+		mutationFn: async () => {
+			try {
+        //still needs fixing
+				const res = await fetch(`/api/notifications/${notifications[0]._id}`, {
+					method: "DELETE",
+				});
+				const data = await res.json();
+        console.log(data);
+
+				if (!res.ok) throw new Error(data.error || "Something went wrong");
+				return data;
+			} catch (error) {
+				throw new Error(error);
+			}
+		},
+
+		onSuccess: () => {
+			toast.success("Notification deleted successfully");
 			queryClient.invalidateQueries({ queryKey: ["notifications"] });
 		},
 
@@ -113,6 +142,8 @@ const NotificationPage = () => {
                     : "liked your post"}
                 </div>
               </Link>
+
+              <FaTrash className="del" onClick={deleteNotification}/>
             </div>
           </div>
         ))}
