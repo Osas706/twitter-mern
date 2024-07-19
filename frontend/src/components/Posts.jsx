@@ -3,13 +3,17 @@ import Post from "./Post";
 import PostSkeleton from "./skeletons/PostSkeleton";
 import { useQuery } from '@tanstack/react-query';
 
-const Posts = ({feedType}) => {
+const Posts = ({feedType, username, userId}) => {
 
   let getPostEndPoint = '';
     if(feedType === 'forYou'){
      getPostEndPoint += '/api/posts/all'
-    }else{
+    }else if(feedType === 'following'){
       getPostEndPoint += '/api/posts/following'
+    }else if(feedType === 'posts'){
+      getPostEndPoint += `/api/posts/user/${username}`
+    }else if(feedType === 'likes'){
+      getPostEndPoint += `/api/posts/likes/${userId}`
     }
 
   const POST_ENDPOINT = getPostEndPoint;
