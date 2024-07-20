@@ -21,10 +21,9 @@ const Sidebar = () => {
 
         const data = await res.json();
         if(!res.ok) throw new Error(data.error || "Failed to login");
-        console.log(data);
+        // console.log(data);
 
-        return data;
-
+        // return data;
       } catch (error) {
         console.error(error);
         throw new Error(error);
