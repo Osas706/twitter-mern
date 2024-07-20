@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { formatMemberSinceDate } from "../utils/formatDate";
 import useFollow from '../hooks/useFollow';
 
@@ -14,7 +14,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import toast from "react-hot-toast";
+import useUpdateProfile from "../hooks/useUpdateProfile";
 
 
 const ProfilePage = () => {
@@ -22,7 +22,6 @@ const ProfilePage = () => {
   const [profileImg, setProfileImg] = useState(null);
   const [feedType, setFeedType] = useState("posts");
   const {username} = useParams();
-  const queryClient = useQueryClient();
 
   const coverImgRef = useRef(null);
   const profileImgRef = useRef(null);
@@ -50,45 +49,7 @@ const ProfilePage = () => {
   });
 
   //update profile func
-  const {mutate: updateProfile, isPending: isUpdating} = useMutation({
-    mutationFn: async() => {
-      try {
-        const res = await fetch('/api/users/update', {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            coverImg,
-            profileImg
-          }),
-        });
-
-        const data = await res.json();
-        if(!res.ok){
-          throw new Error(data.error || "Something went wrong")
-        };
-
-        console.log(data);
-        return data;
-      } catch (error) {
-        console.log(error);
-        throw new Error(error);
-      }
-    },
-
-    onSuccess: () => {
-      toast.success("Updated Successfully");
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["authUser"]}),
-        queryClient.invalidateQueries({ queryKey: ["userProfile"]}),
-      ])
-    },
-
-    onError: (error) => {
-      toast.error(error.message);
-    }
-  })
+  const {updateProfile, isUpdating} = useUpdateProfile();
 
   const isMyProfile = authUser._id === user?._id;
 	const memberSinceDate = formatMemberSinceDate(user?.createdAt);
@@ -211,7 +172,11 @@ const ProfilePage = () => {
                 {(coverImg || profileImg) && (
                   <button
                     className="btn btn-primary rounded-full btn-sm text-white px-4 ml-2"
-                    onClick={() => updateProfile({ coverImg, profileImg })}
+                    onClick={async() => {
+                     await updateProfile({ coverImg, profileImg });
+                     setProfileImg(null);
+                     setCoverImg(null);
+                    }}
                   >
                     {isUpdating ? "Updating..." : "Update"}
                   </button>
